@@ -160,6 +160,7 @@
         }
         #endregion
 
+        // Región que agrupa todos los métodos relacionados con operaciones de Cliente
         #region Metodos Cliente
 
         /// <summary>
