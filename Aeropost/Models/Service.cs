@@ -1,7 +1,7 @@
 ﻿namespace Aeropost.Models
 {
     /// <summary>
-    using System.Data.Entity; // Replace this line
+    using System.Data.Entity;
     /// Clase de servicio que actúa como contexto de base de datos y capa de acceso a datos
     /// Hereda de DbContext para proporcionar funcionalidad ORM (Object-Relational Mapping)
     /// </summary>
