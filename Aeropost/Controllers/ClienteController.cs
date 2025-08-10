@@ -16,11 +16,11 @@ namespace Aeropost.Controllers
         // GET: ClienteController
         public ActionResult Index()
         {
-            var clientes = services.mostrarClientes();
+            var clientes = services.mostrarCliente();
             return View(clientes);
         }
 
-        // GET: ClienteController/Details/5
+        // GET: ClienteController/Details/5S
         public ActionResult Details(int id)
         {
             return View();
