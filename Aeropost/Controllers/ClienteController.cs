@@ -53,8 +53,14 @@ namespace Aeropost.Controllers
         public ActionResult Edit(string cedula)
         {
             var clienteAnterior = services.buscarCliente(cedula);
+            if (clienteAnterior == null)
+            {
+                ViewBag.Error = "Ese cliente no está registrado";
+                return View();
+            }
             return View(clienteAnterior);
         }
+
 
         // POST: ClienteController/Edit
         [HttpPost]
