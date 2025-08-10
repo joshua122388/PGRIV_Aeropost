@@ -55,7 +55,7 @@ namespace Aeropost.Controllers
             var clienteAnterior = services.buscarCliente(cedula);
             if (clienteAnterior == null)
             {
-                ViewBag.Error = "Ese cliente no está registrado";
+                ViewBag.Error = "No se encontró ningún cliente con la cédula proporcionada.";
                 return View();
             }
             return View(clienteAnterior);
