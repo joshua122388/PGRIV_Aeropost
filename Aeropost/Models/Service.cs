@@ -144,19 +144,38 @@
 
         /// <summary>
         /// Función para validar el login de un usuario
+        /// Busca un usuario que coincida con las credenciales proporcionadas y que esté activo
         /// </summary>
         /// <param name="user">Nombre de usuario</param>
         /// <param name="password">Contraseña del usuario</param>
-        /// <returns>Usuario autenticado</returns>
-        /// <exception cref="Exception">Se lanza cuando las credenciales son incorrectas</exception>
+        /// <returns>Usuario autenticado si las credenciales son válidas</returns>
+        /// <exception cref="Exception">Se lanza cuando las credenciales son incorrectas o el usuario está inactivo</exception>
         public Usuario login(string user, string password)
         {
-            var usuarioLogueado = usuarios.FirstOrDefault(x => x.User == user && x.Pass == password);
+            // Ejecuta una consulta LINQ sobre el DbSet de usuarios para buscar una coincidencia exacta
+            // FirstOrDefault() retorna el primer usuario que cumpla TODAS las condiciones o null si no encuentra ninguno
+            // Condición 1: x.User == user - El nombre de usuario debe coincidir exactamente (case-sensitive)
+            // Condición 2: x.Pass == password - La contraseña debe coincidir exactamente (texto plano)
+            // Condición 3: x.Estado == "activo" - Solo permite login a usuarios con estado activo
+            // NOTA: Esto previene que usuarios suspendidos/inactivos puedan acceder al sistema
+            var usuarioLogueado = usuarios.FirstOrDefault(x => x.User == user && x.Pass == password && x.Estado == "activo");
+
+            // Verifica si se encontró un usuario que cumpla con todos los criterios de autenticación
             if (usuarioLogueado != null)
             {
-                return usuarioLogueado;  // Retorna el usuario si las credenciales son correctas
+                // Si las credenciales son válidas y el usuario está activo, retorna el objeto Usuario completo
+                // Este objeto contiene toda la información del usuario autenticado (ID, Nombre, etc.)
+                // que puede ser utilizada en la sesión para personalizar la experiencia del usuario
+                return usuarioLogueado;
             }
-            else throw new Exception("Usuario o contraseña incorrectos");
+            else
+                // Si no se encontró ningún usuario que coincida con los criterios, lanza una excepción
+                // Esto puede ocurrir por: usuario incorrecto, contraseña incorrecta, o usuario inactivo
+                // En Razor Pages, esta excepción debe ser capturada en el code-behind para:
+                // 1. Mostrar un mensaje de error amigable al usuario
+                // 2. Limpiar los campos del formulario de login
+                // 3. Registrar el intento fallido en la bitácora de seguridad si es necesario
+                throw new Exception("Usuario o contraseña incorrectos");
         }
         #endregion
 
