@@ -177,7 +177,7 @@
         /// Devuelve todos los clientes guardados en la base de datos
         /// </summary>
         /// <returns>Array con todos los clientes registrados</returns>
-        public Array mostrarClientes()
+        public Array mostrarCliente()
         {
             return clientes.ToArray();
         }
