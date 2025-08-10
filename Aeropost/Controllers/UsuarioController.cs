@@ -29,7 +29,7 @@ namespace Aeropost.Controllers
         // GET: UsuarioController/Login
         public ActionResult Login()
         {
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: UsuarioController/Login
@@ -43,7 +43,7 @@ namespace Aeropost.Controllers
                 // pendiente de definir
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewBag.ErrorMessage = ex.Message;
                 return View();
