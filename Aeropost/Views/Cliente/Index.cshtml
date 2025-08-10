@@ -55,9 +55,9 @@
                 @Html.DisplayFor(modelItem => item.Telefono)
             </td>
             <td>
-                    @Html.ActionLink("Edit", "Edit", new { cedula = item.Cedula })
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { cedula = item.Cedula })
+                    @Html.ActionLink("Editar", "Edit", new { cedula = item.Cedula }, new { @class = "btn btn-sm btn-primary me-1" })
+                    @Html.ActionLink("Eliminar", "Delete", new { cedula = item.Cedula }, new { @class = "btn btn-sm btn-danger" })
+
             </td>
         </tr>
 }
