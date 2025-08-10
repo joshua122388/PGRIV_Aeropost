@@ -8,9 +8,6 @@ namespace Aeropost.Models
     /// </summary>
     public class Usuario
     {
-        // =========================
-        // Campos privados (camelCase)
-        // =========================
 
         /// <summary>
         /// Identificador único del usuario - Clave primaria autoincremental en la base de datos

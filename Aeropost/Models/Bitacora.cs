@@ -4,9 +4,6 @@ namespace Aeropost.Models
 {
     public class Bitacora
     {
-        // =========================
-        // Campos privados (camelCase)
-        // =========================
 
         /// <summary>
         /// Identificador único del registro de bitácora - Clave primaria autoincremental en la base de datos
