@@ -1,14 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Aeropost.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aeropost.Controllers
 {
     public class ClienteController : Controller
     {
+        private Service services;
+
+        public ClienteController()
+        {
+            this.services = new Service();
+        }
+
         // GET: ClienteController
         public ActionResult Index()
         {
-            return View();
+            var clientes = services.mostrarClientes();
+            return View(clientes);
         }
 
         // GET: ClienteController/Details/5
@@ -26,49 +35,63 @@ namespace Aeropost.Controllers
         // POST: ClienteController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Cliente cliente)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    services.agregarCliente(cliente);
+                    return RedirectToAction("Index");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            catch { }
+            return View();
         }
 
         // GET: ClienteController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string cedula)
         {
-            return View();
+            var clienteAnterior = services.buscarCliente(cedula);
+            return View(clienteAnterior);
         }
 
-        // POST: ClienteController/Edit/5
+        // POST: ClienteController/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Cliente cliente)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    services.actualizarCliente(cliente);
+                    return RedirectToAction("Index");
+                }
             }
-            catch
-            {
-                return View();
-            }
+            catch { }
+            return View();
         }
 
         // GET: ClienteController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string cedula)
         {
-            return View();
+            try
+            {
+                var clienteEliminado = services.buscarCliente(cedula);
+                services.eliminarCliente(clienteEliminado);
+                return RedirectToAction("Index");
+            }
+            catch (Exception)
+            {
+                return View();
+            }
         }
 
         // POST: ClienteController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(string cedula, IFormCollection collection)
         {
             try
             {
