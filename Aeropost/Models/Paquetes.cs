@@ -13,7 +13,7 @@ namespace Aeropost.Models
         public string CedulaCliente { get; set; }
 
       
-        public Cliente Cliente { get; set; } 
+        public Cliente Cliente { get; set; }     // ESTE ES EL 
 
      
         public string TiendaOrigen { get; set; } // resellers como  Amazon, Shein, Temu que le hacen servicio a aeropost
