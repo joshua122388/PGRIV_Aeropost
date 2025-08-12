@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\contr\\OneDrive\\Escritorio\\projecto programacion iv\\Aeropost\\Aeropost.csproj": {}
+    "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {}
   },
   "projects": {
-    "C:\\Users\\contr\\OneDrive\\Escritorio\\projecto programacion iv\\Aeropost\\Aeropost.csproj": {
+    "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\contr\\OneDrive\\Escritorio\\projecto programacion iv\\Aeropost\\Aeropost.csproj",
+        "projectUniqueName": "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
         "projectName": "Aeropost",
-        "projectPath": "C:\\Users\\contr\\OneDrive\\Escritorio\\projecto programacion iv\\Aeropost\\Aeropost.csproj",
-        "packagesPath": "C:\\Users\\contr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\contr\\OneDrive\\Escritorio\\projecto programacion iv\\Aeropost\\obj\\",
+        "projectPath": "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
+        "packagesPath": "C:\\Users\\melin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\contr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\melin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -68,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
