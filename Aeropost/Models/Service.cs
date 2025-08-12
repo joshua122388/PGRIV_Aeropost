@@ -1,7 +1,8 @@
 ﻿namespace Aeropost.Models
 {
     /// <summary>
-    using System.Data.Entity;
+    using Microsoft.EntityFrameworkCore;
+
     /// Clase de servicio que actúa como contexto de base de datos y capa de acceso a datos
     /// Hereda de DbContext para proporcionar funcionalidad ORM (Object-Relational Mapping)
     /// </summary>
@@ -12,6 +13,9 @@
         /// DbSet permite realizar operaciones CRUD (Create, Read, Update, Delete) sobre los usuarios
         /// </summary>
         public DbSet<Usuario> usuarios { get; set; }
+
+        public DbSet<Factura> Facturas { get; set; }
+
 
         /// <summary>
         /// Representa la tabla "Clientes" en la base de datos
@@ -25,12 +29,22 @@
         /// </summary>
         public DbSet<Bitacora> bitacora { get; set; }
 
+         // Agregar la propiedad DbSet para "Paquetes" en la clase Service  
+          public DbSet<Paquete> Paquetes { get; set; }
+
+        // Agregar la propiedad DbSet para "Cliente" en la clase Service  
+        public DbSet<Cliente> Clientes { get; set; }
+
         /// <summary>
         /// Constructor que inicializa el contexto de base de datos
         /// Llama al constructor base pasando "Aeropost" como nombre de la cadena de conexión
         /// Esta cadena esta definida en appsettings.json
         /// </summary>
-        public Service() : base("Aeropost") { }
+        public Service(DbContextOptions<Service> options) : base(options) { }
+
+        public Service()
+        {
+        }
 
         // Región que agrupa todos los métodos relacionados con operaciones de Usuario
         #region Metodos Usuario
@@ -285,7 +299,7 @@
         #region Metodos Paquetes CRUD
         public List<Paquete> ListarPaquetes()
         {
-            return _context.Paquetes
+            return Paquetes
                            .Include(p => p.Cliente)
                            .OrderByDescending(p => p.FechaRegistro)
                            .ToList();
@@ -293,7 +307,7 @@
 
         public Paquete ObtenerPaquete(int id)
         {
-            return _context.Paquetes
+            return Paquetes
                            .Include(p => p.Cliente)
                            .FirstOrDefault(p => p.Id == id);
         }
@@ -308,14 +322,14 @@
                 modelo.FechaRegistro = DateTime.Now;
 
                 // valida cliente
-                if (!_context.Clientes.Any(c => c.Cedula == modelo.CedulaCliente))
+                if (!Clientes.Any(c => c.Cedula == modelo.CedulaCliente))
                 {
                     error = "La cédula del cliente no existe.";
                     return false;
                 }
 
-                _context.Paquetes.Add(modelo);
-                _context.SaveChanges();
+               Paquetes.Add(modelo);
+               SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -330,7 +344,7 @@
             error = string.Empty;
             try
             {
-                var db = _context.Paquetes.FirstOrDefault(p => p.Id == modelo.Id);
+                var db = Paquetes.FirstOrDefault(p => p.Id == modelo.Id);
                 if (db == null) { error = "Paquete no encontrado."; return false; }
 
                 // tracking y fecha NO se tocan asi dice el proyecto 
@@ -340,8 +354,8 @@
                 db.ValorTotal = modelo.ValorTotal;
                 db.ProductosEspeciales = modelo.ProductosEspeciales;
 
-                _context.Paquetes.Update(db);
-                _context.SaveChanges();
+               Paquetes.Update(db);
+               SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -356,11 +370,11 @@
             error = string.Empty;
             try
             {
-                var db = _context.Paquetes.Find(id);
+                var db = Paquetes.Find(id);
                 if (db == null) { error = "Paquete no encontrado."; return false; }
 
-                _context.Paquetes.Remove(db);
-                _context.SaveChanges();
+                Paquetes.Remove(db);
+                SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -372,7 +386,7 @@
 
         public List<Paquete> ListarPaquetesPorCliente(string cedula)
         {
-            return _context.Paquetes
+            return Paquetes
                 .Include(p => p.Cliente)
                 .Where(p => p.CedulaCliente == cedula)
                 .OrderByDescending(p => p.FechaRegistro)
@@ -383,4 +397,3 @@
 
 }
 
-}

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {}
+    "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {}
   },
   "projects": {
-    "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {
+    "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
+        "projectUniqueName": "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
         "projectName": "Aeropost",
-        "projectPath": "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
-        "packagesPath": "C:\\Users\\melin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\melin\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\obj\\",
+        "projectPath": "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
+        "packagesPath": "C:\\Users\\PCerda\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\melin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PCerda\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,11 +44,27 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[8.0.7, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -68,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
