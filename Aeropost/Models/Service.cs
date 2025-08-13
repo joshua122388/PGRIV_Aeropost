@@ -1,8 +1,7 @@
 ﻿namespace Aeropost.Models
 {
     /// <summary>
-    using Microsoft.EntityFrameworkCore;
-
+    using System.Data.Entity;
     /// Clase de servicio que actúa como contexto de base de datos y capa de acceso a datos
     /// Hereda de DbContext para proporcionar funcionalidad ORM (Object-Relational Mapping)
     /// </summary>
@@ -13,9 +12,6 @@
         /// DbSet permite realizar operaciones CRUD (Create, Read, Update, Delete) sobre los usuarios
         /// </summary>
         public DbSet<Usuario> usuarios { get; set; }
-
-        public DbSet<Factura> Facturas { get; set; }
-
 
         /// <summary>
         /// Representa la tabla "Clientes" en la base de datos
@@ -29,22 +25,12 @@
         /// </summary>
         public DbSet<Bitacora> bitacora { get; set; }
 
-         // Agregar la propiedad DbSet para "Paquetes" en la clase Service  
-          public DbSet<Paquete> Paquetes { get; set; }
-
-        // Agregar la propiedad DbSet para "Cliente" en la clase Service  
-        public DbSet<Cliente> Clientes { get; set; }
-
         /// <summary>
         /// Constructor que inicializa el contexto de base de datos
         /// Llama al constructor base pasando "Aeropost" como nombre de la cadena de conexión
         /// Esta cadena esta definida en appsettings.json
         /// </summary>
-        public Service(DbContextOptions<Service> options) : base(options) { }
-
-        public Service()
-        {
-        }
+        public Service() : base("Aeropost") { }
 
         // Región que agrupa todos los métodos relacionados con operaciones de Usuario
         #region Metodos Usuario
@@ -193,7 +179,7 @@
         }
         #endregion
 
-        // Región que agrupa todos los métodos relacionados con operaciones de Cliente        
+        // Región que agrupa todos los métodos relacionados con operaciones de Cliente
         #region Metodos Cliente
 
         /// <summary>
@@ -277,123 +263,5 @@
         }
 
         #endregion
-
-        #region Metodos Paquetes  Utilidades
-        private string GenerarTracking(string tienda)
-        {
-            // 2 letras de tienda + mes (2) + año (2) + "MIA" + 5 dígitos
-            string letras = string.IsNullOrWhiteSpace(tienda)
-                ? "XX"
-                : new string(tienda.ToUpper().Where(char.IsLetter).ToArray())
-                    .PadRight(2, 'X')
-                    .Substring(0, 2);
-
-            var now = DateTime.Now;
-            string mes = now.Month.ToString("D2");
-            string yy = (now.Year % 100).ToString("D2");
-            string rnd = new Random().Next(0, 99999).ToString("D5");
-            return $"{letras}{mes}{yy}MIA{rnd}";
-        }
-        #endregion
-
-        #region Metodos Paquetes CRUD
-        public List<Paquete> ListarPaquetes()
-        {
-            return Paquetes
-                           .Include(p => p.Cliente)
-                           .OrderByDescending(p => p.FechaRegistro)
-                           .ToList();
-        }
-
-        public Paquete ObtenerPaquete(int id)
-        {
-            return Paquetes
-                           .Include(p => p.Cliente)
-                           .FirstOrDefault(p => p.Id == id);
-        }
-
-        public bool AgregarPaquete(Paquete modelo, out string error)
-        {
-            error = string.Empty;
-            try
-            {
-                // genera tracking + fecha
-                modelo.NumeroTracking = GenerarTracking(modelo.TiendaOrigen);
-                modelo.FechaRegistro = DateTime.Now;
-
-                // valida cliente
-                if (!Clientes.Any(c => c.Cedula == modelo.CedulaCliente))
-                {
-                    error = "La cédula del cliente no existe.";
-                    return false;
-                }
-
-               Paquetes.Add(modelo);
-               SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-                return false;
-            }
-        }
-
-        public bool ActualizarPaquete(Paquete modelo, out string error)
-        {
-            error = string.Empty;
-            try
-            {
-                var db = Paquetes.FirstOrDefault(p => p.Id == modelo.Id);
-                if (db == null) { error = "Paquete no encontrado."; return false; }
-
-                // tracking y fecha NO se tocan asi dice el proyecto 
-                db.CedulaCliente = modelo.CedulaCliente;
-                db.TiendaOrigen = modelo.TiendaOrigen;
-                db.Peso = modelo.Peso;
-                db.ValorTotal = modelo.ValorTotal;
-                db.ProductosEspeciales = modelo.ProductosEspeciales;
-
-               Paquetes.Update(db);
-               SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-                return false;
-            }
-        }
-
-        public bool EliminarPaquete(int id, out string error)
-        {
-            error = string.Empty;
-            try
-            {
-                var db = Paquetes.Find(id);
-                if (db == null) { error = "Paquete no encontrado."; return false; }
-
-                Paquetes.Remove(db);
-                SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-                return false;
-            }
-        }
-
-        public List<Paquete> ListarPaquetesPorCliente(string cedula)
-        {
-            return Paquetes
-                .Include(p => p.Cliente)
-                .Where(p => p.CedulaCliente == cedula)
-                .OrderByDescending(p => p.FechaRegistro)
-                .ToList();
-        }
-        #endregion
     }
-
 }
-

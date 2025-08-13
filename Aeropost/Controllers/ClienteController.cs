@@ -1,7 +1,6 @@
 ﻿using Aeropost.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Aeropost.Controllers
 {
@@ -9,18 +8,17 @@ namespace Aeropost.Controllers
     {
         private Service services;
 
-        public ClienteController(DbContextOptions<Service> options)
+        public ClienteController()
         {
-            this.services = new Service(options);
+            this.services = new Service();
         }
 
-        // GET: ClienteController  
+        // GET: ClienteController
         public ActionResult Index()
         {
             var clientes = services.mostrarCliente();
             return View(clientes);
         }
-
 
         // GET: ClienteController/Details/5S
         public ActionResult Details(int id)
