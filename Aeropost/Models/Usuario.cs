@@ -159,5 +159,21 @@ namespace Aeropost.Models
         /// </summary>
         [Display(Name = "Clave")]
         public string Pass { get => pass; set => pass = value; }
+
+        /// <summary>
+        /// Valida que las claves ingresadas coincidan
+        /// </summary>
+        /// <param name="pass">Clave principal</param>
+        /// <param name="passConfirmacion">Confirmación de clave</param>
+        /// <returns>True si las claves coinciden, False si no coinciden</returns>
+        public bool validacionClave(string pass, string passConfirmacion)
+        {
+            if (pass == passConfirmacion)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

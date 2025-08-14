@@ -4,9 +4,8 @@
     ViewData["Title"] = "Editar";
 }
 
-<h1>Editar</h1>
+<h1>Actualizar Usuario</h1>
 
-<h4>Usuario</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,7 +13,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" type="text" class="form-control" />
+                <input asp-for="Id" type="text" class="form-control" readonly/>
                 <span asp-validation-for="Id" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -38,27 +37,25 @@
                 <span asp-validation-for="FechaRegistro" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" type="text" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="User" class="control-label">Nombre de Usuario</label>
                 <input asp-for="User" type="text" class="form-control" placeholder="Ingrese un nombre de usuario" />
                 <span asp-validation-for="User" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Pass" class="control-label">Clave</label>
-                <input asp-for="Pass" type="password" class="form-control" placeholder="Ingrese una contraseña" />
+                <label asp-for="Pass" class="control-label">Clave Actual</label>
+                <input asp-for="Pass" type="password" class="form-control" placeholder="Ingrese la clave actual" />
                 <span asp-validation-for="Pass" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Pass" class="control-label">Clave Nueva</label>
+                <input asp-for="Pass" type="password" class="form-control" placeholder="Ingrese su nueva clave" />
+                <span asp-validation-for="Pass" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-warning">Regresar</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Volver a la Lista</a>
 </div>

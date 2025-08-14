@@ -37,13 +37,23 @@ namespace Aeropost.Controllers
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Usuario usuario)
+        public ActionResult Create(Usuario usuario, string passConfirmacion)
         {
             try
             {
-                if (ModelState.IsValid)
-                    services.agregarUsuario(usuario);
-                return RedirectToAction("Index");
+                if (usuario.validacionClave(usuario.Pass, passConfirmacion))
+                {
+                    
+                    if (ModelState.IsValid)
+                        services.agregarUsuario(usuario);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    
+                    ModelState.AddModelError("Clave", "Las claves no coinciden");
+                    return View(usuario);
+                }
             }
             catch { }
             return View();
