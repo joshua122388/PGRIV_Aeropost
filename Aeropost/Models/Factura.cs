@@ -37,6 +37,15 @@ namespace Aeropost.Models
             this.montoTotal = 0;
         }
 
+        // metodo para calcular el monto total de la factura
+        public decimal calcularMontoFactura(decimal peso, decimal valorTotal, bool productoEspecial)
+        {
+            const decimal tarifaBase = 12m;
+            decimal impuestos = valorTotal * 0.13m;
+            decimal cargosAdicionales = productoEspecial ? valorTotal * 0.10m : 0m;
+            return (peso * tarifaBase) + impuestos + cargosAdicionales;
+        }
+
         // Propiedades públicas con validaciones
         [Required]
         public int Id { get => id; set => id = value; }

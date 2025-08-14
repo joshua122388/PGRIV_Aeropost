@@ -339,17 +339,6 @@
         }
         #endregion
 
-
-        #region Calcular Monto Factura
-        public decimal CalcularMontoFactura(decimal peso, decimal valorTotal, bool productoEspecial)
-        {
-            const decimal tarifaBase = 12m;
-            decimal impuestos = valorTotal * 0.13m;
-            decimal cargosAdicionales = productoEspecial ? valorTotal * 0.10m : 0m;
-            return (peso * tarifaBase) + impuestos + cargosAdicionales;
-        }
-        #endregion
-
         #region metodos Utilidades Paquete
         private string GenerarTracking(string tienda)
         {
