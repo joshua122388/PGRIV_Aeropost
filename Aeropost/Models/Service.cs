@@ -1,7 +1,7 @@
-﻿namespace Aeropost.Models
+﻿using System.Data.Entity;
+namespace Aeropost.Models
 {
     /// <summary>
-    using System.Data.Entity;
     /// Clase de servicio que actúa como contexto de base de datos y capa de acceso a datos
     /// Hereda de DbContext para proporcionar funcionalidad ORM (Object-Relational Mapping)
     /// </summary>
@@ -26,24 +26,22 @@
         public DbSet<Bitacora> bitacora { get; set; }
 
         /// <summary>
-        /// Constructor que inicializa el contexto de base de datos
-        /// Llama al constructor base pasando "Aeropost" como nombre de la cadena de conexión
-        /// Esta cadena esta definida en appsettings.json
-        /// </summary>
-        /// 
-
-        public DbSet<Factura> Facturas { get; set; }
-        /// <summary>
         /// Representa la tabla "Facturas" en la base de datos
         /// DbSet permite realizar operaciones CRUD sobre los registros de bitácora
         /// </summary>
+        public DbSet<Factura> Facturas { get; set; }
 
-        public DbSet<Paquete> Paquetes { get; set; }
         /// <summary>
         /// Representa la tabla "Paquetes" en la base de datos
         /// DbSet permite realizar operaciones CRUD sobre los registros de bitácora
         /// </summary>
+        public DbSet<Paquete> Paquetes { get; set; }
 
+        /// <summary>
+        /// Constructor que inicializa el contexto de base de datos
+        /// Llama al constructor base pasando "Aeropost" como nombre de la cadena de conexión
+        /// Esta cadena esta definida en appsettings.json
+        /// </summary>
         public Service() : base("Aeropost") { }
 
         // Región que agrupa todos los métodos relacionados con operaciones de Usuario
@@ -434,9 +432,7 @@
                 .OrderByDescending(p => p.FechaRegistro)
                 .ToList();
         }
-     
+        #endregion
     }
-    #endregion
-
 }
 

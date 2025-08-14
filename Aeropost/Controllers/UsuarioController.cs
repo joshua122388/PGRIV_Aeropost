@@ -17,7 +17,8 @@ namespace Aeropost.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
-            return View();
+            var usuarios = services.mostrarUsuario();
+            return View(usuarios);
         }
 
         // GET: UsuarioController/Details/5
@@ -29,19 +30,19 @@ namespace Aeropost.Controllers
         // GET: UsuarioController/Login
         public ActionResult Login()
         {
-            return RedirectToAction("Index", "Home");
+            return View();
         }
 
         // POST: UsuarioController/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string usuario, string password)
+        public ActionResult Login(string usuario, string password)
         {
             try
             {
                 var usuarioLogueado = services.login(usuario, password);
-                // pendiente de definir
-                return RedirectToAction(nameof(Index));
+                // redireccionamiento temporal, esto puedo cambiar luego
+                return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {

@@ -1,0 +1,52 @@
+﻿@model Aeropost.Models.Usuario
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Ingrese sus credenciales</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" type="text" class="form-control" placeholder="Ingrese su nombre completo" required />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cedula" class="control-label">Cédula</label>
+                <input asp-for="Cedula" type="text" class="form-control" placeholder="Ingrese su número de cédula" required />
+                <span asp-validation-for="Cedula" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genero" class="control-label">Género</label>
+                <input asp-for="Genero" type="text" class="form-control" placeholder="Masculino/Femenino" required />
+                <span asp-validation-for="Genero" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="User" class="control-label">Nombre de Usuario</label>
+                <input asp-for="User" type="text" class="form-control" placeholder="Ingrese un nombre de usuario" required />
+                <span asp-validation-for="User" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pass" class="control-label">Clave</label>
+                <input asp-for="Pass" type="password" name="pass" class="form-control" placeholder="Ingrese una contraseña" required />
+                <span asp-validation-for="Pass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pass" class="control-label">Confirmación de contraseña</label>
+                <input asp-for="Pass" type="password" name="passConfirmacion" class="form-control" placeholder="Confirme su contraseña" required />
+                <span asp-validation-for="Pass" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Registrar" class="btn btn-success" />
+                <input type="reset" value="Limpiar" class="btn btn-danger" />
+                <a asp-action="Index" class="btn btn-warning">Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
