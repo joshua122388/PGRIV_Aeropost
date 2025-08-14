@@ -115,24 +115,29 @@ namespace Aeropost.Models
         /// Propiedad pública para acceder al nombre completo del usuario
         /// Se utiliza para mostrar información del usuario en la interfaz
         /// </summary>
+        [Display(Name = "Nombre")]
         public string Nombre { get => nombre; set => nombre = value; }
 
         /// <summary>
         /// Propiedad pública para acceder a la cédula del usuario
         /// Campo de solo lectura después de la creación inicial
         /// </summary>
+
+        [Display(Name = "Cédula")]
         public string Cedula { get => cedula; set => cedula = value; }
 
         /// <summary>
         /// Propiedad pública para acceder al género del usuario
         /// Debe validarse que solo contenga "femenino" o "masculino"
         /// </summary>
+        [Display(Name = "Género")]
         public string Genero { get => genero; set => genero = value; }
 
         /// <summary>
         /// Propiedad pública para acceder a la fecha de registro
         /// Generalmente de solo lectura, se asigna automáticamente
         /// </summary>
+        [Display(Name = "Fecha de Registro")]
         public DateTime FechaRegistro { get => fechaRegistro; set => fechaRegistro = value; }
 
         /// <summary>
@@ -145,12 +150,14 @@ namespace Aeropost.Models
         /// Propiedad pública para acceder al nombre de usuario
         /// Debe ser único en el sistema para evitar conflictos de autenticación
         /// </summary>
+        [Display(Name = "Usuario")]
         public string User { get => user; set => user = value; }
 
         /// <summary>
         /// Propiedad pública para acceder a la contraseña
         /// En un sistema de producción debería manejarse con mayor seguridad
         /// </summary>
+        [Display(Name = "Clave")]
         public string Pass { get => pass; set => pass = value; }
     }
 }

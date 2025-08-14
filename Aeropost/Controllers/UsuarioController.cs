@@ -27,6 +27,29 @@ namespace Aeropost.Controllers
             return View();
         }
 
+
+        // GET: UsuarioController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: UsuarioController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Usuario usuario)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                    services.agregarUsuario(usuario);
+                return RedirectToAction("Index");
+            }
+            catch { }
+            return View();
+        }
+
+
         // GET: UsuarioController/Login
         public ActionResult Login()
         {
@@ -54,28 +77,44 @@ namespace Aeropost.Controllers
         // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var usuarioAnterior = services.buscarUsuario(id);
+            return View(usuarioAnterior);
         }
 
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Usuario usuario)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    services.actualizarUsuario(usuario);
+                    return RedirectToAction("Index");
+                }
             }
             catch
             {
-                return View();
+                
             }
+            return View();
         }
 
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            try{ 
+                var buscarUsuario = services.buscarUsuario(id);
+                services.eliminarUsuario(buscarUsuario);
+                return RedirectToAction("Index");
+            }
+            
+            catch(Exception ex){   
+            
+                return View(ex);
+            }
+            
         }
 
         // POST: UsuarioController/Delete/5
