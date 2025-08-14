@@ -1,33 +1,50 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aeropost.Models
 {
     public class Factura
     {
-        [Key]
-        public int Id { get; set; }
+        // Campos privados para almacenar los datos de la factura
+        private int id;
+        private string numeroFactura;
+        private string numeroTracking;
+        private string cedulaCliente;
+        private DateTime fechaEntrega;
+        private decimal montoTotal;
 
-        [Required]
-        [Display(Name = "Número de Factura")]
-        public string NumeroFactura { get; set; }
+        // Constructor con parámetros para inicializar todos los campos
 
-        [Required]
-        [Display(Name = "Número de Tracking")]
-        public string NumeroTracking { get; set; } // Relación con Paquete
 
-        [Required]
-        [Display(Name = "Cédula del Cliente")]
-        public string CedulaCliente { get; set; } // Relación con Cliente
+        public Factura(int id, string numeroFactura, string numeroTracking, string cedulaCliente, DateTime fechaEntrega, decimal montoTotal)
+        {
+            this.id = id;
+            this.numeroFactura = numeroFactura;
+            this.numeroTracking = numeroTracking;
+            this.cedulaCliente = cedulaCliente;
+            this.fechaEntrega = fechaEntrega;
+            this.montoTotal = montoTotal;
+        }
 
-        [Required]
-        [Display(Name = "Fecha de Entrega")]
-        [DataType(DataType.Date)]
-        public DateTime FechaEntrega { get; set; }
+        // Constructor sin parámetros que inicializa los campos con valores por defecto
+        public Factura()
+        {
+            this.numeroFactura = "";
+            this.numeroTracking = "";
+            this.cedulaCliente = "";
+            this.fechaEntrega = DateTime.Now;
+            this.montoTotal = 0;
+        }
 
+        // Propiedades públicas con validaciones
         [Required]
-        [Display(Name = "Monto Total")]
-        public decimal MontoTotal { get; set; }
-        
+        public int Id { get => id; set => id = value; }
+        public string NumeroFactura { get => numeroFactura; set => numeroFactura = value; }
+        public string NumeroTracking { get => numeroTracking; set => numeroTracking = value; }
+        public string CedulaCliente { get => cedulaCliente; set => cedulaCliente = value; }
+        public DateTime FechaEntrega { get => fechaEntrega; set => fechaEntrega = value; }
+        public decimal MontoTotal { get => montoTotal; set => montoTotal = value; }
+
     }
 }

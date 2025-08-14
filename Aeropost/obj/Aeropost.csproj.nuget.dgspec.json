@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {}
+    "C:\\prograIV_proyecto\\Aeropost\\Aeropost.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj": {
+    "C:\\prograIV_proyecto\\Aeropost\\Aeropost.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
+        "projectUniqueName": "C:\\prograIV_proyecto\\Aeropost\\Aeropost.csproj",
         "projectName": "Aeropost",
-        "projectPath": "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\Aeropost.csproj",
-        "packagesPath": "C:\\Users\\PCerda\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PCerda\\Source\\Repos\\PGRIV_Aeropost\\Aeropost\\obj\\",
+        "projectPath": "C:\\prograIV_proyecto\\Aeropost\\Aeropost.csproj",
+        "packagesPath": "C:\\Users\\contr\\.nuget\\packages\\",
+        "outputPath": "C:\\prograIV_proyecto\\Aeropost\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\PCerda\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\contr\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,12 +44,16 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "EntityFramework": {
+              "target": "Package",
+              "version": "[6.5.1, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.8, )"
@@ -84,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
