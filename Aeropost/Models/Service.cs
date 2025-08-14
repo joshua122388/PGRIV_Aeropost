@@ -43,7 +43,7 @@
         /// Representa la tabla "Paquetes" en la base de datos
         /// DbSet permite realizar operaciones CRUD sobre los registros de bitácora
         /// </summary>
-       
+
         public Service() : base("Aeropost") { }
 
         // Región que agrupa todos los métodos relacionados con operaciones de Usuario
@@ -278,7 +278,79 @@
 
         #endregion
 
-        #region Metodos Paquetes  Utilidades
+        #region Metodos Factura
+        // Agregar factura
+        public void AgregarFactura(Factura factura)
+        {
+            Facturas.Add(factura);
+            SaveChanges();
+        }
+
+        // Mostrar todas las facturas
+        public List<Factura> ObtenerFacturas()
+        {
+            return Facturas.ToList();
+        }
+
+        // Eliminar factura
+        public void EliminarFactura(int id)
+        {
+            var factura = Facturas.Find(id);
+            if (factura != null)
+            {
+                Facturas.Remove(factura);
+                SaveChanges();
+            }
+        }
+
+        // Actualizar factura
+        public void ActualizarFactura(Factura factura)
+        {
+            var existente = Facturas.Find(factura.Id);
+            if (existente != null)
+            {
+                existente.NumeroFactura = factura.NumeroFactura;
+                existente.CedulaCliente = factura.CedulaCliente;
+                existente.MontoTotal = factura.MontoTotal;
+                existente.FechaEntrega = factura.FechaEntrega;
+                existente.NumeroTracking = factura.NumeroTracking;
+                SaveChanges();
+            }
+        }
+
+        // Reporte de facturación total por mes
+        public decimal ObtenerFacturacionTotalPorMes(int mes, int anio)
+        {
+            return Facturas
+                .Where(f => f.FechaEntrega.Month == mes && f.FechaEntrega.Year == anio)
+                .Sum(f => f.MontoTotal);
+        }
+
+        // Mostrar detalle de factura por cédula
+        public List<Factura> ObtenerFacturasPorCedula(string cedula)
+        {
+            return Facturas.Where(f => f.CedulaCliente == cedula).ToList();
+        }
+
+        // Buscar factura por número de tracking
+        public Factura BuscarFacturaPorTracking(string tracking)
+        {
+            return Facturas.FirstOrDefault(f => f.NumeroTracking == tracking);
+        }
+        #endregion
+
+
+        #region Calcular Monto Factura
+        public decimal CalcularMontoFactura(decimal peso, decimal valorTotal, bool productoEspecial)
+        {
+            const decimal tarifaBase = 12m;
+            decimal impuestos = valorTotal * 0.13m;
+            decimal cargosAdicionales = productoEspecial ? valorTotal * 0.10m : 0m;
+            return (peso * tarifaBase) + impuestos + cargosAdicionales;
+        }
+        #endregion
+
+        #region metodos Utilidades Paquete
         private string GenerarTracking(string tienda)
         {
             // 2 letras de tienda + mes (2) + año (2) + "MIA" + 5 dígitos
@@ -296,7 +368,7 @@
         }
         #endregion
 
-        #region Metodos Paquetes CRUD
+        #region Utilidades Paquete
         public List<Paquete> ListarPaquetes()
         {
             return Paquetes
@@ -308,7 +380,7 @@
         public Paquete ObtenerPaquete(int id)
         {
             return Paquetes
-                           .Include(p => p.Cliente)
+                           .Include("Cliente")
                            .FirstOrDefault(p => p.Id == id);
         }
 
@@ -322,7 +394,7 @@
                 modelo.FechaRegistro = DateTime.Now;
 
                 // valida cliente
-                if (!Cliente.any(c => c.Cedula == modelo.CedulaCliente))
+                if (!clientes.Any(c => c.Cedula == modelo.CedulaCliente))
                 {
                     error = "La cédula del cliente no existe.";
                     return false;
@@ -354,7 +426,7 @@
                 db.ValorTotal = modelo.ValorTotal;
                 db.ProductosEspeciales = modelo.ProductosEspeciales;
 
-                Paquetes.Update(db);
+                //db.NumeroTracking = modelo.NumeroTracking; // no se actualiza
                 SaveChanges();
                 return true;
             }
@@ -392,7 +464,9 @@
                 .OrderByDescending(p => p.FechaRegistro)
                 .ToList();
         }
-        #endregion
-
+     
     }
+    #endregion
+
 }
+
