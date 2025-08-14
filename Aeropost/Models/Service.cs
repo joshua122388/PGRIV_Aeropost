@@ -318,25 +318,6 @@
             }
         }
 
-        // Reporte de facturación total por mes
-        public decimal ObtenerFacturacionTotalPorMes(int mes, int anio)
-        {
-            return Facturas
-                .Where(f => f.FechaEntrega.Month == mes && f.FechaEntrega.Year == anio)
-                .Sum(f => f.MontoTotal);
-        }
-
-        // Mostrar detalle de factura por cédula
-        public List<Factura> ObtenerFacturasPorCedula(string cedula)
-        {
-            return Facturas.Where(f => f.CedulaCliente == cedula).ToList();
-        }
-
-        // Buscar factura por número de tracking
-        public Factura BuscarFacturaPorTracking(string tracking)
-        {
-            return Facturas.FirstOrDefault(f => f.NumeroTracking == tracking);
-        }
         #endregion
 
         #region metodos Utilidades Paquete
