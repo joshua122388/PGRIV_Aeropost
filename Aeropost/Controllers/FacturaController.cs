@@ -72,7 +72,7 @@ namespace Aeropost.Controllers
 
                 // Actualizar campos
                 facturaExistente.NumeroFactura = factura.NumeroFactura;
-                facturaExistente.Fecha = factura.Fecha;
+                facturaExistente.FechaEntrega = factura.FechaEntrega;
                 facturaExistente.CedulaCliente = factura.CedulaCliente;
                 facturaExistente.MontoTotal = factura.MontoTotal;
 
