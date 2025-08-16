@@ -133,7 +133,7 @@ namespace Aeropost.Models
                 usuarioAntiguo.Genero = usuario.Genero;                  // Actualiza género
                 usuarioAntiguo.Estado = usuario.Estado;                  // Permite activar/desactivar usuario
                 usuarioAntiguo.User = usuario.User;                      // Actualiza nombre de usuario
-                usuarioAntiguo.Pass = usuario.Pass;                      // Actualiza contraseña
+                usuarioAntiguo.Pass = usuario.Pass;                      // Actualiza contraseña (ya viene preservada del controlador)
 
                 // IMPORTANTE: FechaRegistro NO se actualiza intencionalmente
                 // Debe conservarse la fecha original de cuando se creó el usuario

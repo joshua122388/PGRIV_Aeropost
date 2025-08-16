@@ -10,7 +10,6 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "Aeropost.Models.Service";
         }
 
         protected override void Seed(Aeropost.Models.Service context)
