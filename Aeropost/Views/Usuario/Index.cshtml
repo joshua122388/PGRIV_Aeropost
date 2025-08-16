@@ -55,7 +55,7 @@
                     @Html.DisplayFor(modelItem => item.Genero)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaRegistro)
+                    @item.FechaRegistro.ToString("dd/MM/yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Estado)

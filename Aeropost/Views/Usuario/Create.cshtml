@@ -11,65 +11,12 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" id="userForm">
-            <!--
-            ════════════════════════════════════════════════════════════════════════════════════════
-            TAG HELPER DE VALIDACIÓN: <div asp-validation-summary="All" class="text-danger"></div>
-            ════════════════════════════════════════════════════════════════════════════════════════
-
-            ¿QUÉ ES?
-            - Es un Tag Helper de ASP.NET Core que muestra errores de validación
-            - Se procesa en el SERVIDOR antes de enviar HTML al navegador
-            - Busca errores en el ModelState del controlador automáticamente
-
-            COMPONENTES:
-            1. <div> → Contenedor HTML estándar para agrupar contenido
-            2. asp-validation-summary="All" → Tag Helper que busca TODOS los errores
-            3. class="text-danger" → Clase Bootstrap que aplica color rojo
-
-            OPCIONES DEL ATRIBUTO asp-validation-summary:
-            - "All" → Muestra TODOS los errores (generales + específicos de campos)
-            - "ModelOnly" → Solo errores generales (no asociados a campos específicos)
-            - "None" → No muestra nada (deshabilitado)
-
-            PROCESAMIENTO EN TIEMPO DE EJECUCIÓN:
-
-            SIN ERRORES (carga inicial):
-            <div asp-validation-summary="All" class="text-danger"></div>
-                    ↓ EL SERVIDOR PROCESA ↓
-            <div class="text-danger"></div>  ← Div vacío, invisible
-
-            CON ERRORES (después de validación fallida):
-            <div asp-validation-summary="All" class="text-danger"></div>
-                    ↓ EL SERVIDOR PROCESA ↓
-            <div class="text-danger">
-                <ul>
-                    <li>Las claves no coinciden</li>
-                    <li>El nombre es requerido</li>  ← Si hubiera más errores
-                </ul>
-            </div>
-
-            FLUJO EN TU APLICACIÓN:
-            1. Usuario envía formulario con claves diferentes
-            2. Controlador ejecuta: ModelState.AddModelError("Pass", "Las claves no coinciden")
-            3. Controlador ejecuta: return View(usuario)
-            4. Tag Helper encuentra error en ModelState
-            5. Tag Helper genera HTML con lista de errores
-            6. Usuario ve: "• Las claves no coinciden" en rojo
-
-            RESULTADO VISUAL:
-            • Las claves no coinciden  ← Texto rojo con viñeta
-
-            VENTAJAS:
-            ✓ Automático: No necesitas lógica manual para mostrar errores
-            ✓ Consistente: Formato uniforme para todos los errores
-            ✓ Integrado: Funciona perfectamente con ASP.NET Core validation
-
-            INTERACCIÓN CON OTROS ELEMENTOS:
-            - Este elemento muestra TODOS los errores en UN lugar
-            - Los <span asp-validation-for="Campo"> muestran errores específicos junto a cada campo
-            - Tu error de contraseñas aparecerá en AMBOS lugares porque usas "All"
-            -->
-            <div asp-validation-summary="All" class="text-danger"></div>
+            @if (ViewBag.ErrorMessage != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.ErrorMessage
+                </div>
+            }
 
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label">Nombre Completo</label>

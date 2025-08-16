@@ -41,22 +41,36 @@ namespace Aeropost.Controllers
         {
             try
             {
-                if (usuario.validacionClave(usuario.Pass, passConfirmacion))
+                // Verificar que ambos campos de contraseña estén llenos
+                if (string.IsNullOrEmpty(usuario.Pass) || string.IsNullOrEmpty(passConfirmacion))
                 {
-                    
-                    if (ModelState.IsValid)
-                        services.agregarUsuario(usuario);
+                    ViewBag.ErrorMessage = "Ambos campos de contraseña deben estar llenos";
+                    return View(usuario);
+                }
+
+                // Validar que las contraseñas coincidan
+                var validacionUsuario = usuario.validacionClave(usuario.Pass, passConfirmacion);
+                if (validacionUsuario == false)
+                {
+                    ViewBag.ErrorMessage = "Las contraseñas no coinciden";
+                    return View(usuario);
+                }
+
+                if (ModelState.IsValid)
+                {
+                    services.agregarUsuario(usuario);
                     return RedirectToAction("Index");
                 }
                 else
                 {
-                    
-                    ModelState.AddModelError("Clave", "Las claves no coinciden");
-                    return View(usuario);
+                    ViewBag.ErrorMessage = "Verifique que los datos ingresados sean válidos";
                 }
             }
-            catch { }
-            return View();
+            catch
+            {
+                ViewBag.ErrorMessage = "Ocurrió un error al crear el usuario";
+            }
+            return View(usuario);
         }
 
 
@@ -94,21 +108,44 @@ namespace Aeropost.Controllers
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Usuario usuario)
+        public ActionResult Edit(Usuario usuario, string passConfirmacion)
         {
             try
             {
+                // Solo validar contraseñas si al menos uno de los campos tiene contenido
+                if (!string.IsNullOrEmpty(usuario.Pass) || !string.IsNullOrEmpty(passConfirmacion))
+                {
+                    // Verificar que ambos campos estén llenos
+                    if (string.IsNullOrEmpty(usuario.Pass) || string.IsNullOrEmpty(passConfirmacion))
+                    {
+                        ViewBag.ErrorMessage = "Ambos campos de contraseña deben estar llenos para actualizar la clave";
+                        return View(usuario);
+                    }
+
+                    // Validar que las contraseñas coincidan
+                    var validacionUsuario = usuario.validacionClave(usuario.Pass, passConfirmacion);
+                    if (validacionUsuario == false)
+                    {
+                        ViewBag.ErrorMessage = "Las contraseñas no son las mismas";
+                        return View(usuario);
+                    }
+                }
+
                 if (ModelState.IsValid)
                 {
                     services.actualizarUsuario(usuario);
                     return RedirectToAction("Index");
                 }
+                else
+                {
+                    ViewBag.ErrorMessage = "Verique que los datos ingresados sean validos";
+                }
             }
             catch
             {
-                
+                ViewBag.ErrorMessage = "Ocurrió un error al actualizar el usuario";
             }
-            return View();
+            return View(usuario);
         }
 
         // GET: UsuarioController/Delete/5
