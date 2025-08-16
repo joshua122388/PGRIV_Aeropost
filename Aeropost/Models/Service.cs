@@ -433,6 +433,28 @@ namespace Aeropost.Models
                 .ToList();
         }
         #endregion
+
+        // Region para Bitácora
+        #region Metodos Bitacora
+        public Array mostrarBitacora()
+        {
+            // Convierte el DbSet<Bitacora> en un Array
+            // Esto ejecuta una consulta SELECT * FROM Bitacora
+            return bitacora.ToArray();
+        }
+
+
+        public void registrarLogin(Usuario usu)
+        {
+            bitacora.Add(new Bitacora
+            {
+                User = usu.User,
+                NombreCompleto = usu.Nombre,
+                FechaHora = DateTime.Now // Fecha y hora del evento de inicio de sesión
+            });
+            SaveChanges(); // Guarda los cambios en la base de datos
+        }
+        #endregion
     }
 }
 

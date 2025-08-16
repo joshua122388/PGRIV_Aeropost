@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 
 namespace Aeropost.Models
 {
@@ -51,6 +52,7 @@ namespace Aeropost.Models
             this.fechaLogin = DateTime.Now; // Momento actual del servidor
         }
 
+
         /// <summary>
         /// Propiedad pública para acceder al ID del registro de bitácora
         /// </summary>
@@ -60,16 +62,19 @@ namespace Aeropost.Models
         /// <summary>
         /// Propiedad pública para acceder al nombre de usuario (login)
         /// </summary>
+        [Display(Name = "Usuario")]
         public string User { get => user; set => user = value; }
 
         /// <summary>
         /// Propiedad pública para acceder al nombre completo del usuario
         /// </summary>
+        [Display(Name = "Nombre de Usuario")]
         public string NombreCompleto { get => nombreCompleto; set => nombreCompleto = value; }
 
         /// <summary>
         /// Propiedad pública para acceder a la fecha y hora del evento
         /// </summary>
+        [Display(Name = "Fecha y Hora de login")]
         public DateTime FechaHora { get => fechaLogin; set => fechaLogin = value; }
 
     }

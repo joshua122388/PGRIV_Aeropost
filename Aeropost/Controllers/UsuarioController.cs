@@ -88,7 +88,11 @@ namespace Aeropost.Controllers
             try
             {
                 var usuarioLogueado = services.login(usuario, password);
-                // redireccionamiento temporal, esto puedo cambiar luego
+                
+                // Registrar el login exitoso en la bitácora
+                services.registrarLogin(usuarioLogueado);
+                
+                
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
