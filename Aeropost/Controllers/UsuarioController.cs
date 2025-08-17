@@ -1,189 +1,119 @@
-﻿using Aeropost.Models;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Aeropost.Models;
 
 namespace Aeropost.Controllers
 {
     public class UsuarioController : Controller
     {
-
-        private Service services;
-
-        public UsuarioController()
+        // LISTA
+        public IActionResult Index()
         {
-            this.services = new Service();
+            using var db = new Service();
+            var data = db.usuarios.ToArray(); // tu Service expone DbSet usuarios
+            return View(data);
         }
 
-        // GET: UsuarioController
-        public ActionResult Index()
-        {
-            var usuarios = services.mostrarUsuario();
-            return View(usuarios);
-        }
+        // LOGIN (GET)
+        [HttpGet]
+        public IActionResult Login() => View();
 
-        // GET: UsuarioController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-
-        // GET: UsuarioController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: UsuarioController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Usuario usuario, string passConfirmacion)
+        // LOGIN (POST)
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Login(string usuario, string password)
         {
             try
             {
-                // Verificar que ambos campos de contraseña estén llenos
-                if (string.IsNullOrEmpty(usuario.Pass) || string.IsNullOrEmpty(passConfirmacion))
-                {
-                    ViewBag.ErrorMessage = "Ambos campos de contraseña deben estar llenos";
-                    return View(usuario);
-                }
-
-                // Validar que las contraseñas coincidan
-                var validacionUsuario = usuario.validacionClave(usuario.Pass, passConfirmacion);
-                if (validacionUsuario == false)
-                {
-                    ViewBag.ErrorMessage = "Las contraseñas no coinciden";
-                    return View(usuario);
-                }
-
-                if (ModelState.IsValid)
-                {
-                    services.agregarUsuario(usuario);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "Verifique que los datos ingresados sean válidos";
-                }
-            }
-            catch
-            {
-                ViewBag.ErrorMessage = "Ocurrió un error al crear el usuario";
-            }
-            return View(usuario);
-        }
-
-
-        // GET: UsuarioController/Login
-        public ActionResult Login()
-        {
-            HttpContext.Session.Clear(); // Limpiar la sesión al iniciar el login
-            return View();
-        }
-
-        // POST: UsuarioController/Login
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(string usuario, string password)
-        {
-            try
-            {
-                var usuarioLogueado = services.login(usuario, password);
-                HttpContext.Session.SetString("nombreUsuario", usuarioLogueado.Nombre);
-
-                // Registrar el login exitoso en la bitácora
-                services.registrarLogin(usuarioLogueado);
-                
-                
+                using var db = new Service();
+                var u = db.login(usuario, password); // valida activo
+                // sesión
+                HttpContext.Session.SetString("User", u.User ?? "");
+                HttpContext.Session.SetString("NombreCompleto", u.Nombre ?? "");
+                // bitácora
+                db.registrarLogin(u);
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return View();
             }
         }
 
-        // GET: UsuarioController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Salir()
         {
-            var usuarioAnterior = services.buscarUsuario(id);
-            return View(usuarioAnterior);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
 
-        // POST: UsuarioController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Usuario usuario, string passConfirmacion)
+        // CREATE
+        [HttpGet]
+        public IActionResult Create() => View(new Usuario { Estado = "activo", FechaRegistro = DateTime.Now });
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Create(Usuario model)
         {
+            var confirm = Request.Form["passConfirmacion"].ToString();
+            if (model.Pass != confirm)
+                ModelState.AddModelError("Pass", "Las claves no coinciden.");
 
+            if (!ModelState.IsValid) return View(model);
 
-            
-            try
-            {
-                // Verificar que ambos campos de contraseña estén llenos
-                if (string.IsNullOrEmpty(usuario.Pass) || string.IsNullOrEmpty(passConfirmacion))
-                {
-                    ViewBag.ErrorMessage = "Ambos campos de contraseña deben estar llenos";
-                    return View(usuario);
-                }
-
-                // Validar que las contraseñas coincidan
-                var validacionUsuario = usuario.validacionClave(usuario.Pass, passConfirmacion);
-                if (validacionUsuario == false)
-                {
-                    ViewBag.ErrorMessage = "Las contraseñas no son las mismas";
-                    return View(usuario);
-                }
-
-                if (ModelState.IsValid)
-                {
-                    services.actualizarUsuario(usuario);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ViewBag.ErrorMessage = "Ingrese una nueva contraseña para aplicar los cambios";
-                }
-            }
-            catch
-            {
-                ViewBag.ErrorMessage = "Ocurrió un error al actualizar el usuario";
-            }
-            return View(usuario);
-            
+            using var db = new Service();
+            model.FechaRegistro = DateTime.Now;
+            db.agregarUsuario(model);
+            TempData["ok"] = "Usuario creado correctamente.";
+            return RedirectToAction(nameof(Index));
         }
 
-
-        // GET: UsuarioController/Delete/5
-        public ActionResult Delete(int id)
+        // EDIT
+        [HttpGet]
+        public IActionResult Edit(int id)
         {
-            try{ 
-                var buscarUsuario = services.buscarUsuario(id);
-                services.eliminarUsuario(buscarUsuario);
-                return RedirectToAction("Index");
-            }
-            
-            catch(Exception ex){   
-            
-                return View(ex);
-            }
-            
+            using var db = new Service();
+            var u = db.buscarUsuario(id);
+            return View(u);
         }
 
-        // POST: UsuarioController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Edit(Usuario model)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            if (!ModelState.IsValid) return View(model);
+
+            using var db = new Service();
+            // actualiza SIN tocar la cédula
+            var u = db.usuarios.FirstOrDefault(x => x.Id == model.Id);
+            if (u == null) { TempData["err"] = "Usuario no encontrado."; return RedirectToAction(nameof(Index)); }
+
+            u.Nombre = model.Nombre;
+            u.Genero = model.Genero;
+            u.Estado = model.Estado;
+            u.User = model.User;
+            u.Pass = model.Pass;
+            db.SaveChanges();
+
+            TempData["ok"] = "Usuario actualizado.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // DELETE
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            using var db = new Service();
+            var u = db.buscarUsuario(id);
+            return View(u);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            using var db = new Service();
+            var u = db.usuarios.FirstOrDefault(x => x.Id == id);
+            if (u != null) { db.eliminarUsuario(u); TempData["ok"] = "Usuario eliminado."; }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

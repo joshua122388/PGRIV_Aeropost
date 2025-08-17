@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Aeropost.Models;
 
@@ -7,134 +6,97 @@ namespace Aeropost.Controllers
 {
     public class PaqueteController : Controller
     {
-        
-        private readonly Service services = new Service();
-
-        // GET: /Paquete
+        // LISTA
         public IActionResult Index()
         {
-            var lista = services.mostrarPaquete(); // Array
-            return View(lista);
+            using var db = new Service();
+            var data = db.ListarPaquetes().ToArray();
+            return View(data);
         }
 
-        // GET: /Paquete/Details/5
+        // DETALLE
         public IActionResult Details(int id)
         {
-            try
-            {
-                var p = services.buscarPaquete(id);
-                return View(p);
-            }
-            catch (Exception ex)
-            {
-                TempData["err"] = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
+            using var db = new Service();
+            var p = db.ObtenerPaquete(id);
+            if (p == null) { TempData["err"] = "Paquete no encontrado."; return RedirectToAction(nameof(Index)); }
+            return View(p);
         }
 
-        // GET: /Paquete/Create
-        public IActionResult Create()
+        // CREATE
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Create(Paquete model)
         {
-            return View(new Paquete());
+            using var db = new Service();
+            if (!ModelState.IsValid) return View(model);
+
+            if (!db.AgregarPaquete(model, out var error))
+            {
+                ModelState.AddModelError(string.Empty, error);
+                return View(model);
+            }
+            TempData["ok"] = "Paquete registrado.";
+            return RedirectToAction(nameof(Index));
         }
 
-        // POST: /Paquete/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Paquete modelo)
-        {
-            if (!ModelState.IsValid) return View(modelo);
-
-            try
-            {
-                services.agregarPaquete(modelo); // genera tracking + fecha
-                TempData["ok"] = $"Paquete creado. Tracking: {modelo.NumeroTracking}";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(modelo);
-            }
-        }
-
-        // GET: /Paquete/Edit/5
+        // EDIT
+        [HttpGet]
         public IActionResult Edit(int id)
         {
-            try
-            {
-                var p = services.buscarPaquete(id);
-                return View(p);
-            }
-            catch (Exception ex)
-            {
-                TempData["err"] = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
+            using var db = new Service();
+            var p = db.ObtenerPaquete(id);
+            if (p == null) { TempData["err"] = "Paquete no encontrado."; return RedirectToAction(nameof(Index)); }
+            return View(p);
         }
 
-        // POST: /Paquete/Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(Paquete modelo)
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Edit(Paquete model)
         {
-            if (!ModelState.IsValid) return View(modelo);
+            using var db = new Service();
+            if (!ModelState.IsValid) return View(model);
 
-            try
+            if (!db.ActualizarPaquete(model, out var error))
             {
-                services.actualizarPaquete(modelo); // NO toca tracking ni fecha
-                TempData["ok"] = "Paquete actualizado.";
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError(string.Empty, error);
+                return View(model);
             }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(modelo);
-            }
+            TempData["ok"] = "Paquete actualizado.";
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Paquete/Delete/5
+        // DELETE
+        [HttpGet]
         public IActionResult Delete(int id)
         {
-            try
-            {
-                var p = services.buscarPaquete(id);
-                return View(p);
-            }
-            catch (Exception ex)
-            {
-                TempData["err"] = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
+            using var db = new Service();
+            var p = db.ObtenerPaquete(id);
+            if (p == null) { TempData["err"] = "Paquete no encontrado."; return RedirectToAction(nameof(Index)); }
+            return View(p);
         }
 
-        // POST: /Paquete/DeleteConfirmed/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                var p = services.buscarPaquete(id);
-                services.eliminarPaquete(p);
+            using var db = new Service();
+            if (!db.EliminarPaquete(id, out var error))
+                TempData["err"] = error;
+            else
                 TempData["ok"] = "Paquete eliminado.";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["err"] = ex.Message;
-                return RedirectToAction(nameof(Index));
-            }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Paquete/PorCliente?cedula=...
+        // Reporte por cédula
         public IActionResult PorCliente(string cedula)
         {
-            var lista = string.IsNullOrWhiteSpace(cedula)
-                ? Array.Empty<Paquete>()
-                : services.mostrarPaquetesPorCliente(cedula);
+            using var db = new Service();
             ViewBag.Cedula = cedula;
-            return View(lista);
+            var data = string.IsNullOrWhiteSpace(cedula)
+                ? db.ListarPaquetes().ToArray()
+                : db.ListarPaquetesPorCliente(cedula).ToArray();
+            return View(data);
         }
     }
 }
