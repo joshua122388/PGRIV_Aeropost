@@ -1,216 +1,140 @@
 ﻿using System;
 using System.Collections.Generic;
-using Aeropost.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Aeropost.Models;
 
 namespace Aeropost.Controllers
 {
     public class PaqueteController : Controller
     {
-        private Service services;
+        
+        private readonly Service services = new Service();
 
-
-        public PaqueteController()
+        // GET: /Paquete
+        public IActionResult Index()
         {
-            this.services = new Service();
+            var lista = services.mostrarPaquete(); // Array
+            return View(lista);
         }
 
-        // GET: Paquete
-        public ActionResult Index()
-        {
-            try
-            {
-                var lista = services.ListarPaquetes(); // <- Service
-                return View(lista);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-                return View(new List<Paquete>());
-            }
-        }
-
-        // GET: Paquete/Details/5
-        public ActionResult Details(int id)
+        // GET: /Paquete/Details/5
+        public IActionResult Details(int id)
         {
             try
             {
-                var modelo = services.ObtenerPaquete(id); // <- Service
-                if (modelo == null) return NotFound();
-                return View(modelo);
+                var p = services.buscarPaquete(id);
+                return View(p);
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View();
+                TempData["err"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
-        // GET: Paquete/Create
-        public ActionResult Create()
+        // GET: /Paquete/Create
+        public IActionResult Create()
         {
-            try
-            {
-                CargarCombos();
-                return View(new Paquete());
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-                return View(new Paquete());
-            }
+            return View(new Paquete());
         }
 
-        // POST: Paquete/Create
+        // POST: /Paquete/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Paquete modelo)
+        public IActionResult Create(Paquete modelo)
         {
+            if (!ModelState.IsValid) return View(modelo);
+
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    CargarCombos();
-                    return View(modelo);
-                }
-
-                if (!services.AgregarPaquete(modelo, out string error)) // <- Service
-                {
-                    ModelState.AddModelError("", error);
-                    CargarCombos();
-                    return View(modelo);
-                }
-
-                TempData["ok"] = "Paquete registrado correctamente.";
+                services.agregarPaquete(modelo); // genera tracking + fecha
+                TempData["ok"] = $"Paquete creado. Tracking: {modelo.NumeroTracking}";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                CargarCombos();
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return View(modelo);
             }
         }
 
-        // GET: Paquete/Edit/5
-        public ActionResult Edit(int id)
+        // GET: /Paquete/Edit/5
+        public IActionResult Edit(int id)
         {
             try
             {
-                var modelo = services.ObtenerPaquete(id); // <- Service
-                if (modelo == null) return NotFound();
-                CargarCombos();
-                return View(modelo);
+                var p = services.buscarPaquete(id);
+                return View(p);
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View();
+                TempData["err"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
-        // POST: Paquete/Edit/5
+        // POST: /Paquete/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Paquete modelo)
+        public IActionResult Edit(Paquete modelo)
         {
+            if (!ModelState.IsValid) return View(modelo);
+
             try
             {
-                // NO validar campos de solo lectura solo los lee
-                ModelState.Remove(nameof(Paquete.NumeroTracking));
-                ModelState.Remove(nameof(Paquete.FechaRegistro));
-
-                if (!ModelState.IsValid)
-                {
-                    CargarCombos();
-                    return View(modelo);
-                }
-
-                if (!services.ActualizarPaquete(modelo, out string error)) // <- Service
-                {
-                    ModelState.AddModelError("", error);
-                    CargarCombos();
-                    return View(modelo);
-                }
-
+                services.actualizarPaquete(modelo); // NO toca tracking ni fecha
                 TempData["ok"] = "Paquete actualizado.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                CargarCombos();
+                ModelState.AddModelError(string.Empty, ex.Message);
                 return View(modelo);
             }
         }
 
-        // GET: Paquete/Delete/5
-        public ActionResult Delete(int id)
+        // GET: /Paquete/Delete/5
+        public IActionResult Delete(int id)
         {
             try
             {
-                var modelo = services.ObtenerPaquete(id); // <- Service
-                if (modelo == null) return NotFound();
-                return View(modelo);
+                var p = services.buscarPaquete(id);
+                return View(p);
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                return View();
+                TempData["err"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
-        // POST: Paquete/Delete/5
+        // POST: /Paquete/DeleteConfirmed/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             try
             {
-                if (!services.EliminarPaquete(id, out string error)) // <- Service
-                {
-                    ModelState.AddModelError("", error);
-                    var modelo = services.ObtenerPaquete(id);
-                    return View("Delete", modelo);
-                }
-
+                var p = services.buscarPaquete(id);
+                services.eliminarPaquete(p);
                 TempData["ok"] = "Paquete eliminado.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ViewBag.ErrorMessage = ex.Message;
-                var modelo = services.ObtenerPaquete(id);
-                return View("Delete", modelo);
+                TempData["err"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
         }
 
-        // GET: Paquete/ReportePorCliente?cedula=XXXXXXXX
-        public ActionResult ReportePorCliente(string cedula)
+        // GET: /Paquete/PorCliente?cedula=...
+        public IActionResult PorCliente(string cedula)
         {
-            try
-            {
-                ViewBag.Cedula = cedula;
-                var lista = string.IsNullOrWhiteSpace(cedula)
-                    ? new List<Paquete>()
-                    : services.ListarPaquetesPorCliente(cedula); // <- Service
-                return View(lista);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-                return View(new List<Paquete>());
-            }
-        }
-
-        // ====== Helpers (mismo estilo simple) ======
-        private void CargarCombos()
-        {
-            ViewBag.Tiendas = new SelectList(new[] { "Amazon", "Shein", "Temu", "eBay", "AliExpress" });
-
-            // var clientes = services.ListarClientes();
-            // ViewBag.Cedulas = new SelectList(clientes, "Cedula", "Cedula");
+            var lista = string.IsNullOrWhiteSpace(cedula)
+                ? Array.Empty<Paquete>()
+                : services.mostrarPaquetesPorCliente(cedula);
+            ViewBag.Cedula = cedula;
+            return View(lista);
         }
     }
 }
