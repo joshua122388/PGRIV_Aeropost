@@ -1,111 +1,70 @@
-﻿using Aeropost.Models;
-using Microsoft.AspNetCore.Http;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Aeropost.Models;
 
 namespace Aeropost.Controllers
 {
     public class ClienteController : Controller
     {
-        private Service services;
-
-        public ClienteController()
+        public IActionResult Index()
         {
-            this.services = new Service();
-        }
-        // GET: ClienteController
-        public ActionResult Index()
-        {
-            var clientes = services.mostrarCliente();
-            return View(clientes);
+            using var db = new Service();
+            return View(db.mostrarCliente() as Cliente[]);
         }
 
-        // GET: ClienteController/Details/5S
-        public ActionResult Details(int id)
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Create(Cliente model)
         {
-            return View();
+            if (!ModelState.IsValid) return View(model);
+            using var db = new Service();
+            db.agregarCliente(model);
+            TempData["ok"] = "Cliente creado.";
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ClienteController/Create
-        public ActionResult Create()
+        [HttpGet]
+        public IActionResult Edit(string cedula)
         {
-            return View();
+            using var db = new Service();
+            return View(db.buscarCliente(cedula));
         }
 
-        // POST: ClienteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Cliente cliente)
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Edit(Cliente model)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    services.agregarCliente(cliente);
-                    return RedirectToAction("Index");
-                }
-            }
-            catch { }
-            return View();
+            if (!ModelState.IsValid) return View(model);
+            using var db = new Service();
+            db.actualizarCliente(model);
+            TempData["ok"] = "Cliente actualizado.";
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ClienteController/Edit/5
-        public ActionResult Edit(string cedula)
+        [HttpGet]
+        public IActionResult Delete(string cedula)
         {
-            var clienteAnterior = services.buscarCliente(cedula);
-            if (clienteAnterior == null)
-            {
-                ViewBag.Error = "No se encontró ningún cliente con la cédula proporcionada.";
-                return View();
-            }
-            return View(clienteAnterior);
+            using var db = new Service();
+            return View(db.buscarCliente(cedula));
         }
 
-
-        // POST: ClienteController/Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Cliente cliente)
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(string cedula)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    services.actualizarCliente(cliente);
-                    return RedirectToAction("Index");
-                }
-            }
-            catch { }
-            return View();
+            using var db = new Service();
+            var c = db.clientes.FirstOrDefault(x => x.Cedula == cedula);
+            if (c != null) { db.eliminarCliente(c); TempData["ok"] = "Cliente eliminado."; }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: ClienteController/Delete/5
-        public ActionResult Delete(string cedula)
+        // Reporte por tipo
+        public IActionResult PorTipo(string tipo)
         {
-            try
-            {
-                var clienteEliminado = services.buscarCliente(cedula);
-                services.eliminarCliente(clienteEliminado);
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                return View();
-            }
-        }
-
-        // POST: ClienteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(string cedula, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            using var db = new Service();
+            ViewBag.Tipo = tipo;
+            var data = string.IsNullOrWhiteSpace(tipo) ? db.mostrarCliente() as Cliente[] : db.mostrarClientesPorTipo(tipo) as Cliente[];
+            return View(data);
         }
     }
 }

@@ -1,0 +1,66 @@
+@model Aeropost.Models.Factura
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<h1>Actualizar Factura</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" type="text" class="form-control" readonly />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NumeroFactura" class="control-label">Número de Factura</label>
+                <input asp-for="NumeroFactura" type="text" class="form-control" placeholder="FAC20250101123000" />
+                <span asp-validation-for="NumeroFactura" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NumeroTracking" class="control-label">Número de Tracking</label>
+                <input asp-for="NumeroTracking" type="text" class="form-control" placeholder="AM0825MIA12345" />
+                <span asp-validation-for="NumeroTracking" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CedulaCliente" class="control-label">Cédula del Cliente</label>
+                <input asp-for="CedulaCliente" type="text" class="form-control" placeholder="1-2345-6789" />
+                <span asp-validation-for="CedulaCliente" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FechaEntrega" class="control-label">Fecha de Entrega</label>
+                <input asp-for="FechaEntrega" type="date" class="form-control" />
+                <span asp-validation-for="FechaEntrega" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MontoTotal" class="control-label">Monto Total (USD)</label>
+                <input asp-for="MontoTotal" type="number" step="0.01" min="0" class="form-control" placeholder="0.00" />
+                <span asp-validation-for="MontoTotal" class="text-danger"></span>
+            </div>
+
+            <br />
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm px-4">
+                    <i class="bi bi-save me-2"></i>Guardar
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Volver a la lista
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

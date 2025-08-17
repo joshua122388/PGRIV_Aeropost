@@ -318,120 +318,102 @@ namespace Aeropost.Models
 
         #endregion
 
-        #region metodos Utilidades Paquete
+
+
+        #region Metodos Paquete
+
+        /// <summary>
+        /// Genera el tracking: 2 letras de tienda + MM + yy + "MIA" + 5 dígitos
+        /// </summary>
         private string GenerarTracking(string tienda)
         {
-            // 2 letras de tienda + mes (2) + año (2) + "MIA" + 5 dígitos
             string letras = string.IsNullOrWhiteSpace(tienda)
                 ? "XX"
-                : new string(tienda.ToUpper().Where(char.IsLetter).ToArray())
-                    .PadRight(2, 'X')
-                    .Substring(0, 2);
+                : new string(tienda.Where(char.IsLetter).Take(2).ToArray())
+                    .ToUpper()
+                    .PadRight(2, 'X');
 
             var now = DateTime.Now;
             string mes = now.Month.ToString("D2");
             string yy = (now.Year % 100).ToString("D2");
-            string rnd = new Random().Next(0, 99999).ToString("D5");
+            string rnd = new Random().Next(0, 100000).ToString("D5");
+
             return $"{letras}{mes}{yy}MIA{rnd}";
         }
-        #endregion
 
-        #region Utilidades Paquete
-        public List<Paquete> ListarPaquetes()
+        /// <summary>Inserta un paquete. Valida que exista la cédula del cliente y genera tracking/fecha.</summary>
+        public void agregarPaquete(Paquete paquete)
+        {
+            if (!clientes.Any(c => c.Cedula == paquete.CedulaCliente))
+                throw new Exception("La cédula del cliente no existe.");
+
+            paquete.NumeroTracking = GenerarTracking(paquete.TiendaOrigen);
+            paquete.FechaRegistro = DateTime.Now;
+
+            Paquetes.Add(paquete);
+            SaveChanges();
+        }
+
+        /// <summary>Devuelve todos los paquetes (ordenados por fecha de registro desc).</summary>
+        public Paquete[] mostrarPaquete()
         {
             return Paquetes
-                           .Include(p => p.Cliente)
-                           .OrderByDescending(p => p.FechaRegistro)
-                           .ToList();
-        }
-
-        public Paquete ObtenerPaquete(int id)
-        {
-            return Paquetes
-                           .Include("Cliente")
-                           .FirstOrDefault(p => p.Id == id);
-        }
-
-        public bool AgregarPaquete(Paquete modelo, out string error)
-        {
-            error = string.Empty;
-            try
-            {
-                // genera tracking + fecha
-                modelo.NumeroTracking = GenerarTracking(modelo.TiendaOrigen);
-                modelo.FechaRegistro = DateTime.Now;
-
-                // valida cliente
-                if (!clientes.Any(c => c.Cedula == modelo.CedulaCliente))
-                {
-                    error = "La cédula del cliente no existe.";
-                    return false;
-                }
-
-                Paquetes.Add(modelo);
-                SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-                return false;
-            }
-        }
-
-        public bool ActualizarPaquete(Paquete modelo, out string error)
-        {
-            error = string.Empty;
-            try
-            {
-                var db = Paquetes.FirstOrDefault(p => p.Id == modelo.Id);
-                if (db == null) { error = "Paquete no encontrado."; return false; }
-
-                // tracking y fecha NO se tocan asi dice el proyecto 
-                db.CedulaCliente = modelo.CedulaCliente;
-                db.TiendaOrigen = modelo.TiendaOrigen;
-                db.Peso = modelo.Peso;
-                db.ValorTotal = modelo.ValorTotal;
-                db.ProductosEspeciales = modelo.ProductosEspeciales;
-
-                //db.NumeroTracking = modelo.NumeroTracking; // no se actualiza
-                SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-                return false;
-            }
-        }
-
-        public bool EliminarPaquete(int id, out string error)
-        {
-            error = string.Empty;
-            try
-            {
-                var db = Paquetes.Find(id);
-                if (db == null) { error = "Paquete no encontrado."; return false; }
-
-                Paquetes.Remove(db);
-                SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                error = ex.Message;
-                return false;
-            }
-        }
-
-        public List<Paquete> ListarPaquetesPorCliente(string cedula)
-        {
-            return Paquetes
-                .Include(p => p.Cliente)
-                .Where(p => p.CedulaCliente == cedula)
+                // .Include("Cliente") // Descomenta si tu modelo tiene navegación Cliente
                 .OrderByDescending(p => p.FechaRegistro)
-                .ToList();
+                .ToArray();
         }
+
+        /// <summary>Busca un paquete por Id.</summary>
+        public Paquete buscarPaquete(int id)
+        {
+            var p = Paquetes.FirstOrDefault(x => x.Id == id);
+            if (p == null) throw new Exception("Paquete no encontrado");
+            return p;
+        }
+
+        /// <summary>Busca un paquete por número de tracking.</summary>
+        public Paquete buscarPaquetePorTracking(string tracking)
+        {
+            var p = Paquetes.FirstOrDefault(x => x.NumeroTracking == tracking);
+            if (p == null) throw new Exception("No existe paquete con ese tracking");
+            return p;
+        }
+
+        /// <summary>Elimina un paquete existente.</summary>
+        public void eliminarPaquete(Paquete paquete)
+        {
+            Paquetes.Remove(paquete);
+            SaveChanges();
+        }
+
+        /// <summary>
+        /// Actualiza un paquete. NO se modifica el número de tracking ni la fecha de registro.
+        /// </summary>
+        public void actualizarPaquete(Paquete paquete)
+        {
+            var db = Paquetes.FirstOrDefault(x => x.Id == paquete.Id);
+            if (db == null) throw new Exception("Paquete no encontrado");
+
+            // Tracking y fecha NO se tocan
+            db.CedulaCliente = paquete.CedulaCliente;
+            db.TiendaOrigen = paquete.TiendaOrigen;
+            db.Peso = paquete.Peso;
+            db.ValorTotal = paquete.ValorTotal;
+            db.ProductosEspeciales = paquete.ProductosEspeciales;
+
+            SaveChanges();
+        }
+
+        /// <summary>Lista paquetes de un cliente por cédula.</summary>
+        public Paquete[] mostrarPaquetesPorCliente(string cedula)
+        {
+            return Paquetes
+                // .Include("Cliente") // Descomenta si tienes navegación
+                .Where(x => x.CedulaCliente == cedula)
+                .OrderByDescending(x => x.FechaRegistro)
+                .ToArray();
+        }
+
         #endregion
 
         // Region para Bitácora

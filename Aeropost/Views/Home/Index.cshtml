@@ -1,11 +1,73 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    // Establece el título de la página que se mostrará en la pestaña del navegador y en el layout principal.
+    ViewData["Title"] = "Inicio";
 }
 
-@if (!string.IsNullOrEmpty(ViewBag.NombreUsuario))
-{
-    <div class="text-center">
-        <h1 class="display-4">Bienvenido @ViewBag.NombreUsuario</h1>
-
+<!-- Contenedor principal con padding vertical -->
+<div class="container py-5">
+    <div class="row align-items-center justify-content-center">
+        <!-- Columna izquierda: mensaje de bienvenida y botón de acción -->
+        <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+            <!-- Título principal de la página -->
+            <h1 class="display-4 text-primary fw-bold mb-3">¡Bienvenido a Aeropost!</h1>
+            <!-- Descripción breve de la empresa -->
+            <p class="lead mb-4">
+                Tu aliado confiable en logística, paquetería y facturación.<br>
+                Gestiona tus envíos y clientes de forma rápida, segura y eficiente.
+            </p>
+            <!-- Botón que dirige a la sección de clientes -->
+            <a asp-controller=/Usuario asp-action="Index" class="btn btn-primary btn-lg shadow">Comenzar ahora</a>
+        </div>
+        <!-- Columna derecha: imagen decorativa -->
+        <div class="col-lg-5 text-center">
+            <!-- Imagen de un avión representando la temática de envíos -->
+            <img src="https://img.icons8.com/ios-filled/200/007bff/airplane-take-off.png" alt="Avión Aeropost" class="img-fluid mb-3" style="max-width: 180px;">
+        </div>
     </div>
-}
+</div>
+
+<!-- Sección de información adicional con tres tarjetas -->
+<div class="container pb-5">
+    <div class="row g-4">
+        <!-- Tarjeta 1: Servicios -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <!-- Icono representando servicios -->
+                    <img src="https://img.icons8.com/fluency/64/box.png" alt="Servicios" class="mb-3">
+                    <h5 class="card-title text-primary">Nuestros Servicios</h5>
+                    <p class="card-text">
+                        Envíos nacionales e internacionales, rastreo en tiempo real, gestión de clientes y facturación electrónica.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Tarjeta 2: Contacto -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <!-- Icono de teléfono -->
+                    <img src="https://img.icons8.com/color/64/000000/phone.png" alt="Contacto" class="mb-3">
+                    <h5 class="card-title text-primary">Contacto</h5>
+                    <p class="card-text">
+                        ¿Tienes dudas? Escríbenos a <a href="mailto:info@aeropost.com">info@aeropost.com</a> o llámanos al <strong>+506 2222 3333</strong> / <strong>+506 8888 9999</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Tarjeta 3: Ubicación -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <!-- Icono de ubicación -->
+                    <img src="https://img.icons8.com/color/64/000000/marker.png" alt="Ubicación" class="mb-3">
+                    <h5 class="card-title text-primary">Ubicación</h5>
+                    <p class="card-text">
+                        Oficinas centrales: Avenida Central 456, San José, Costa Rica.<br>
+                        <a href="https://goo.gl/maps/6g7yQw8v9vK2" target="_blank">Ver en el mapa</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

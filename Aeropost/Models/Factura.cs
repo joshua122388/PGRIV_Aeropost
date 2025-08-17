@@ -177,4 +177,13 @@ namespace Aeropost.Models
         /// </summary>
         public decimal MontoTotal { get => montoTotal; set => montoTotal = value; }
     }
-}
+
+     public void CalcularMonto()
+        {
+            const decimal TARIFA_BASE = 12m;
+            decimal baseCargo = Peso * TARIFA_BASE;
+            decimal impuesto13 = ValorTotalPaquete * 0.13m;
+            decimal adicional10 = EsEspecial ? ValorTotalPaquete * 0.10m : 0m;
+            MontoPagar = baseCargo + impuesto13 + adicional10;
+        }
+    }

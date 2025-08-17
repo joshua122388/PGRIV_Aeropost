@@ -1,66 +1,73 @@
 ﻿@model Aeropost.Models.Cliente
 
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = "Edit";
+    // Título de la página
+    ViewData["Title"] = "Editar Cliente";
 }
 
-<h1>Edit</h1>
-
-<h4>Cliente</h4>
+<h1>Editar Cliente</h1>
+<h4>Clientes</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <!-- Formulario para editar un cliente existente -->
         <form asp-action="Edit">
+            <!-- Muestra errores de validación del modelo -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Campo: Cédula (solo lectura) -->
             <div class="form-group">
                 <label asp-for="Cedula" class="control-label"></label>
-                <input asp-for="Cedula" class="form-control" />
+                <input asp-for="Cedula" class="form-control" readonly />
                 <span asp-validation-for="Cedula" class="text-danger"></span>
             </div>
+            <!-- Campo: Nombre -->
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+            <!-- Campo: Tipo (desplegable) -->
             <div class="form-group">
                 <label asp-for="Tipo" class="control-label"></label>
-                <select asp-for="Tipo" class="form-control">
-                    <option value="">Seleccione un tipo</option>
+                <select asp-for="Tipo" class="form-control" required>
+                    <option value="" disabled selected hidden>Seleccione un tipo</option>
                     <option value="Regular">Regular</option>
                     <option value="Frecuente">Frecuente</option>
                     <option value="Suspendido">Suspendido</option>
                 </select>
                 <span asp-validation-for="Tipo" class="text-danger"></span>
             </div>
+            <!-- Campo: Correo -->
             <div class="form-group">
                 <label asp-for="Correo" class="control-label"></label>
                 <input asp-for="Correo" class="form-control" />
                 <span asp-validation-for="Correo" class="text-danger"></span>
             </div>
+            <!-- Campo: Dirección de Entrega -->
             <div class="form-group">
                 <label asp-for="DireccionEntrega" class="control-label"></label>
                 <input asp-for="DireccionEntrega" class="form-control" />
                 <span asp-validation-for="DireccionEntrega" class="text-danger"></span>
             </div>
+            <!-- Campo: Teléfono -->
             <div class="form-group">
                 <label asp-for="Telefono" class="control-label"></label>
                 <input asp-for="Telefono" class="form-control" />
                 <span asp-validation-for="Telefono" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
+            <!-- Botones de acción -->
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm px-4">
+                    <i class="bi bi-save me-2"></i>Guardar
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Volver a la lista
+                </a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
