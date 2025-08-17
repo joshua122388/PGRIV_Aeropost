@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Aeropost.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
     <header>
-        <nav id="menu" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Aeropost</a>
+                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">Aeropost</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -24,16 +25,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Cliente" asp-action="Index">Registro de Clientes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="About" asp-action="Index">Acerca de Nosotros</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Bitacora" asp-action="Index">Bitacora</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Login">Salir</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="About" asp-action="Index">Acerca de Nosotros</a>
                         </li>
                     </ul>
                 </div>
@@ -46,7 +41,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer">
         <div class="container py-2 text-center">
             &copy; 2025 - Aeropost
         </div>

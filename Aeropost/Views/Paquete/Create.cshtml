@@ -1,0 +1,95 @@
+﻿@model Aeropost.Models.Paquete
+@{
+    ViewData["Title"] = "Crear Paquete";
+}
+
+<h1>Crear Paquete</h1>
+
+<h4>Paquete</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" id="packageForm">
+            <!--
+            ════════════════════════════════════════════════════════════════════════════════════════
+            TAG HELPER DE VALIDACIÓN: <div asp-validation-summary="All" class="text-danger"></div>
+            ════════════════════════════════════════════════════════════════════════════════════════
+
+            ¿QUÉ ES?
+            - Es un Tag Helper de ASP.NET Core que muestra errores de validación
+            - Se procesa en el SERVIDOR antes de enviar HTML al navegador
+            - Busca errores en el ModelState del controlador automáticamente
+
+            OPCIONES DEL ATRIBUTO asp-validation-summary:
+            - "All"       → Muestra TODOS los errores (generales + específicos de campos)
+            - "ModelOnly" → Solo errores generales (no asociados a campos específicos)
+            - "None"      → No muestra nada
+
+            EJEMPLOS EN ESTE FORMULARIO:
+            - Si el Service valida que la cédula NO existe: ModelState.AddModelError("", "La cédula del cliente no existe.")
+            - Si faltan campos requeridos: se agregan errores por cada <span asp-validation-for="...">
+
+            FLUJO:
+            1) Envías el formulario.
+            2) El controlador intenta guardar; si hay errores, hace: return View(modelo).
+            3) Este Tag Helper construye una lista <ul> con los mensajes.
+            -->
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="CedulaCliente" class="control-label">Cédula del Cliente</label>
+                <input asp-for="CedulaCliente" class="form-control" type="text" required />
+                <span asp-validation-for="CedulaCliente" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TiendaOrigen" class="control-label">Tienda de Origen</label>
+                <select asp-for="TiendaOrigen" class="form-control" required>
+                    <option value="">Seleccione una opción</option>
+                    <option>Amazon</option>
+                    <option>Shein</option>
+                    <option>Temu</option>
+                    <option>eBay</option>
+                    <option>AliExpress</option>
+                </select>
+                <span asp-validation-for="TiendaOrigen" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Peso" class="control-label">Peso (kg)</label>
+                <input asp-for="Peso" class="form-control" type="number" step="0.01" min="0" required />
+                <span asp-validation-for="Peso" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ValorTotal" class="control-label">Valor Total (USD)</label>
+                <input asp-for="ValorTotal" class="form-control" type="number" step="0.01" min="0" required />
+                <span asp-validation-for="ValorTotal" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mt-2">
+                <input asp-for="ProductosEspeciales" class="form-check-input" id="chkEspecial" />
+                <label class="form-check-label" for="chkEspecial">Productos Especiales</label>
+                <span asp-validation-for="ProductosEspeciales" class="text-danger"></span>
+            </div>
+
+            <small class="text-muted d-block mt-2">
+                * El <strong>número de tracking</strong> y la <strong>fecha de registro</strong> se generan automáticamente al guardar.
+            </small>
+
+            <br />
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg shadow-sm px-4">
+                    <i class="bi bi-box-seam me-2"></i>Crear
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Volver a la lista
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

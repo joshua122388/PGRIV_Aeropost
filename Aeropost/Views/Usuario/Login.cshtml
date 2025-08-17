@@ -4,43 +4,56 @@
     ViewData["Title"] = "Login";
 }
 
-<h1>Ingrese sus credenciales</h1>
+<div class="container min-vh-100 d-flex align-items-center py-5">
+    <div class="row justify-content-center w-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h1 class="display-5 text-primary fw-bold mb-4">Ingrese sus credenciales</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                    <div class="alert alert-danger fs-6" role="alert">
+                        @ViewBag.ErrorMessage
+                    </div>
+                    }
 
-            @* Mostrar mensaje de error si las credenciales son inválidas *@
-            @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage.ToString().Length > 0)
-            {
-                <div class="alert alert-danger" role="alert">
-                    Credenciales inválidas
+                    <form asp-action="Login" method="post" class="row g-4">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="col-12">
+                            <label for="usuario" class="form-label fw-semibold fs-5">Nombre de Usuario</label>
+                            <input id="usuario" name="usuario" type="text"
+                                   class="form-control form-control-lg"
+                                   placeholder="Ingrese su usuario"
+                                   autocomplete="username" required />
+                        </div>
+
+                        <div class="col-12">
+                            <label for="password" class="form-label fw-semibold fs-5">Clave</label>
+                            <input id="password" name="password" type="password"
+                                   class="form-control form-control-lg"
+                                   placeholder="Ingrese su clave"
+                                   autocomplete="current-password" required />
+                        </div>
+
+                        <div class="col-12 d-flex flex-column flex-md-row gap-3 mt-2">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 py-2 flex-fill">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                            </button>
+                            <a asp-controller="About" asp-action="Index"
+                               class="btn btn-outline-secondary btn-lg px-5 py-2 flex-fill text-center">
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+
                 </div>
-            }
-
-            <div class="form-group">
-                <label asp-for="User" class="control-label">Nombre de Usuario</label>
-                <input name="usuario" type="text" class="form-control" placeholder="Ingrese un nombre de usuario" required />
-                <span asp-validation-for="User" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Pass" class="control-label">Clave</label>
-                <input name="password" type="password" class="form-control" placeholder="Ingrese una contraseña" required />
-                <span asp-validation-for="Pass" class="text-danger"></span>
-            </div>
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Ingresar" class="btn btn-success" />
-                <a asp-action="Index" class="btn btn-warning">Regresar</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<script>
-
-    var menu = document.getElementById("menu");
-    menu.style.display = "none";
-</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
