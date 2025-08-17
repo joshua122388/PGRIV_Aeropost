@@ -15,11 +15,6 @@ namespace Aeropost.Controllers
 
         public IActionResult Index()
         {
-            var nombreUsuario = HttpContext.Session.GetString("nombreUsuario");
-            if (nombreUsuario != null)
-                ViewBag.NombreUsuario = nombreUsuario;
-            else
-                return RedirectToAction("Login", "Usuario");
             return View();
         }
 
