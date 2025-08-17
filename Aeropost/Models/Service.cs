@@ -438,8 +438,6 @@ namespace Aeropost.Models
         #region Metodos Bitacora
         public Array mostrarBitacora()
         {
-            // Convierte el DbSet<Bitacora> en un Array
-            // Esto ejecuta una consulta SELECT * FROM Bitacora
             return bitacora.ToArray();
         }
 
